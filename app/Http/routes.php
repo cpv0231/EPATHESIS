@@ -114,6 +114,45 @@ Route::post('store/wishlistcart/' ,'WishListController@addToCart');
 
 Route::get('store/wishlist/delete/{id}' ,'WishListController@deleteWishlist');
 
-//dashboard every view
+//dashboard every view ---TRACK PRODUCTS --SAKA NA MUNA TO ISISINGIT
 
 Route::get('admin/dashboard', 'AdminController@TrackProducts');
+
+
+//DITO LAHAT NAG START YUNG ADMIN DASHBOARD ---MARK
+
+route::get('admin/dashboard/index', 'AdminController@AdminDashboard');	//LANDING PAGE NG ADMIN DASHBOARD
+
+route::get('admin/dashboard/charts' , 'AdminController@AdminCharts');	//CHARTS PAGE NG ADMIN DASHBOARD
+route::get('admin/dashboard/tables' , 'AdminController@AdminTables');	//TABLES PAGE NG ADMIN DASHBOARD
+
+//route ng Admin Dashboard/Forms --dito ung mga pag iinput ng items, etc...
+route::get('admin/dashboard/addProducts' , 'AdminController@addProducts');	//PAG AADD NG PRODUCT
+route::get('admin/dashboard/editProducts/{id}' , 'AdminController@editProducts'); //PAG I EDIT NG PRODUCT
+
+//CATEGORIES
+Route::post('admin/dashboard/updateCategories', 'AdminController@updateCategories');
+Route::post('admin/dashboard/addCategories', '<AdminController@add></AdminController@add>Categories');
+Route::get('admin/dashboard/deleteCategories/{id}', 'AdminController@deleteCategories');
+//END OF CATEGORIES
+
+//SUBCATEGORIES
+Route::get('admin/dashboard/editSubcategories/{id}', 'AdminController@editSubcategories');
+Route::post('admin/dashboard/updateSubcategories', 'AdminController@updateSubcategories');
+Route::post('admin/dashboard/addSubcategories', 'AdminController@addSubcategories');
+Route::get('admin/dashboard/deleteSubcategories/{id}','AdminController@deleteSubcategories');
+//END OF SUBCATEGORIES
+
+//BRAND
+Route::post('admin/dashboard/addBrands', 'AdminController@addBrands');
+Route::get('admin/dashboard/editBrands/{id}', 'AdminController@editBrands');
+Route::post('admin/dashboard/updateBrands', 'AdminController@updateBrands');
+//END OF BRAND
+
+Route::get('/', 'StoreController@index');
+
+Route::get('store/subcategory/{cat_id}', 'StoreController@getSubcategories');
+Route::get('store/search/', 'StoreController@getSearch');
+
+
+Route::get('admin/dashboard/categories/', 'AdminController@categories');	//LANDING PAGE NG CATEGORIES

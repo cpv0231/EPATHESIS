@@ -260,6 +260,7 @@ public function storeProducts(Request $request) {
     ->with('category' , Category::all());
   }
 
+/*
   //edit products
     public function editProducts($id) {
     $brands = array();
@@ -283,6 +284,7 @@ public function storeProducts(Request $request) {
      ->with('cart',$cart)
     ->with('category' , Category::all());
   }
+  */
 
 
 // update products
@@ -322,7 +324,7 @@ public function updateProducts(Request $request) {
       ->withErrors($validator)
       ->withInput();
   }
-//view of track productss
+//view of track productss ---SAKA NA MUNA TO ISISINGIT---
   public function TrackProducts(){
       $category = Category::all();
       $subcategory = Subcategory::all();
@@ -345,4 +347,199 @@ public function updateProducts(Request $request) {
   }
 
 
+//DITO LAHAT NAG START YUNG ADMIN DASHBOARD ---MARK
+  public function adminDashboard(){
+    return view('admin.dashboard.index');
+  }
+
+public function adminCharts(){
+    return view('admin.dashboard.charts');
+  }
+
+  public function adminTables(){
+    return view('admin.dashboard.tables');
+  }
+
+
+//LANDING PAGE NG PRODUCT NA MERONG ADD FUNCTIONALITY
+  public function addProducts(){
+    $category = Category::all();
+      $subcategory = Subcategory::all();
+      $products = Product::all();
+      $brands = Brand::all();
+
+    return view('admin.dashboard.addProducts')
+    ->with('subcategories', subcategory::all())
+    ->with('brand', Brand::all())
+    ->with('products', Product::all());
+  }
+//END NG PRODUCT NA MERONG ADD FUNCTIONALITY
+
+
+//START NG EDIT PRODUCTS    <<<<<<<<<<<<<<<<<<<<<<<-------ERROR PA! HINDI KO MAGAWA YUNG MAY KASAMANG VIEW PRODUCTS YUNG EDIT PRODUCT FORM PARA MAGKATABI SILA
+    public function editProducts($id) {
+    $brands = array();
+    foreach(Brand::all() as $brand) {  
+      $brands[0] = 'no brand';
+      $brands[$brand->id] = $brand->name;
+    }
+
+     $subcategories = array();
+
+    foreach(Subcategory::all() as $subcategory) {
+
+      $subcategories[$subcategory->id] = $subcategory->name;
+    }
+
+    $viewproducts = Product::all();
+
+    return View('admin.dashboard.editProducts')
+    ->with('products', Product::find($id))
+    ->with('subcategories', $subcategory)
+    ->with('brands', $brands)
+    ->with('viewproducts', $viewproducts)
+    ->with('category' , Category::all());
+
+  }
+//END NG EDIT PRODUCTS
+
+
+//CATEGORIES
+  public function categories(){
+        return view('admin/dashboard/categories')
+        ->with('category' ,Category::paginate(5))
+        ->with('subcategories',Subcategory::paginate(5))
+        ->with('brand' ,Brand::paginate(5));
+      
+    }
+     
+    //store categories
+     public function addCategories(){
+            $categories = new Category();
+            $categories->name = Input::get('category');
+            $categories->save();
+        
+           return redirect('admin/dashboard/categories');
+    }
+    //edit categories
+     public function editCategories(Request $request){
+      $category = Category::find($request['postId']);
+      $category->name = $request['category'];
+      $category->update();
+       return response()->json(['message' => 'Updated Category'] , 200);      
+    }
+
+
+    // update categories
+    public function updateCategories(){
+ 
+       $data = array(
+                   'name' => Input::get('category')
+                );
+        $id = Input::get('id');
+        $i = DB::table('categories')->where('id',$id)->update($data);
+               if($i > 0){
+                    return redirect('admin/dashboard/categories');
+
+        }return redirect('admin/dashboard/categories');
+
+   }
+   //delete category
+    public function deleteCategories($id){
+      $delete = DB::table('categories')->where('id',$id)->delete();
+        if($delete){
+          return redirect('admin/dashboard/categories');
+        }
+
+    }
+
+    //store subcategory
+     public function addSubcategories(){
+       $subcategory = new Subcategory();
+       $subcategory->name = Input::get('subcategory');
+       $subcategory->category_id = Input::get('category_id');
+       $subcategory->save();
+       return redirect('admin/dashboard/categories');
+    }
+
+
+ 
+
+    //edit Subcategory
+     public function editSubcategories($id){
+          $subcategory = DB::table('subcategories')->get();
+          $category = Category::all();
+          $rows = DB::table('subcategories')->where('id',$id)->first();
+
+         return view('admin.dashboard.editSubcategories')
+         ->with('rows',$rows)
+         ->with('category',$category)
+         ->with('subcategories',$subcategory);
+        }
+    
+    //update subcategory
+      public function updateSubcategories(){
+     
+       $data = array(
+                'name' => Input::get('subcategory'),
+                'category_id' => Input::get('category_id')
+                );
+
+        $id = Input::get('id');
+        $i = DB::table('subcategories')->where('id',$id)->update($data);
+               if($i > 0){
+                    return redirect('admin/dashboard/categories');
+
+               }return redirect('admin/dashboard/categories');
+
+       }
+      //delete subcategory
+   public function deleteSubcategories($id){
+        $delete = DB::table('subcategories')->where('id',$id)->delete();
+        if($delete){
+            echo 'Record have been delete successfuly';
+            return redirect('admin/dashboard/categories');
+        }
+
+    }
+
+    // BRAND
+
+    //storebrand
+     public function addBrands(){
+       $brands = new Brand();
+       $brands->name = Input::get('brand');
+       $brands->save();
+       return redirect('admin/dashboard/categories');
+    }
+
+    //edit brand
+     public function editBrands($id){
+      $row = DB::table('brands')->where('id',$id)->first();
+
+     return view('admin.dashboard.editBrands')
+     ->with('row',$row)
+     ->with('category',Category::all())
+     ->with('subcategories',Subcategory::All());
+     } 
+    
+    //update brand
+     public function updateBrands(){
+ 
+   $data = array(
+            'name' => Input::get('brand')
+            );
+    $id = Input::get('id');
+    $i = DB::table('brands')->where('id',$id)->update($data);
+           if($i > 0){
+                return redirect('admin/dashboard/categories');
+
+           }return redirect('admin/dashboard/categories');
+
+   }
+
+    //End BRAND
+
 }
+
+
