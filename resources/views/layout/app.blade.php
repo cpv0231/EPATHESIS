@@ -77,7 +77,7 @@
                   <a href="{{ url('/admin/products') }}"><i class="glyphicon glyphicon-pencil"></i> Products</a>
                 </li>
                  <li>
-                  <a href="{{ url('/admin/dashboard') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i>Dashboard</a>
+                  <a href="{{ url('/admin/dashboard/index') }}"><i class="fa fa-bar-chart" aria-hidden="true"></i>Dashboard</a>
                 </li>                   
               @endif 
 
